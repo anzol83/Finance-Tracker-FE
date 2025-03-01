@@ -1,6 +1,8 @@
 import { Button, Form } from "react-bootstrap";
 import InputField from "./InputField";
 import { useState } from "react";
+import { createUser } from "../axios/userAxios";
+import { toast } from "react-toastify";
 
 
 
@@ -16,6 +18,9 @@ const SignupForm = () => {
     const [formData, setFormData] = useState(initialFormData)
     const {full_name, email, password, confirm_password} = formData
 
+    // State to implement loading flow
+    const [isLoading, setIsLoading] = useState(false)
+
     // Handle on change
     const handleOnChange = (e) => {
         const { value, name } = e.target
@@ -27,10 +32,30 @@ const SignupForm = () => {
     }
 
     // Handle On Submit
-    const handleOnSubmit = (e) => {
+    const handleOnSubmit = async (e) => {
         e.preventDefault()
 
+        // When button is clicked
+
+        setIsLoading(true);
+
         // send an api request to create a user
+        const response = await createUser({
+            name: full_name,
+            email,
+            password,
+        })
+
+        // set is loading false when response is here
+        setIsLoading(false);
+
+        // Handle Error
+        if(response.status === "error"){
+            return toast.error(response.message)
+        }
+
+        // Handel Success
+        toast.success(response.message)
     }
 
     return (
@@ -83,7 +108,13 @@ const SignupForm = () => {
                 }}
             />
 
-            <Button variant="primary" type="submit">Sign Up</Button>
+            <Button 
+                variant="primary" 
+                type="submit"
+                disabled={isLoading}
+                >
+                    {isLoading ? 'Signing up...' : 'Sign Up'}
+            </Button>
         </Form>
     );
 }
