@@ -1,11 +1,19 @@
+/* eslint-disable react/prop-types */
+import { Container } from "react-bootstrap";
+import TopNavbar from "../components/TopNavbar";
+import TransactionForm from "../components/TransactionForm";
 
+const TransactionPage = (props) => {
+  const { user } = props
 
-const TransactionPage = () => {
-    // Check if user exists is authenticated
-    // if not return back, because this is
-  return (
-    <h1>Transaction page</h1>
-  )
+  return ( 
+      <Container>
+        <TopNavbar userName={user.name} />
+
+        {/* Transaction Form */}
+        <TransactionForm userId={user.id} />
+      </Container>
+   );
 }
-
-export default TransactionPage
+ 
+export default TransactionPage;
