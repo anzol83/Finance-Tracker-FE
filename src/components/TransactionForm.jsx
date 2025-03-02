@@ -36,7 +36,7 @@ const TransactionForm = (props) => {
 
     // Handle Error
     if(response.status === "error"){
-      toast.error(response.message)
+      return toast.error(response.message)
     }
     // Handle Success
     toast.success(response.message)
