@@ -10,7 +10,7 @@ import PrivateRoutes from './components/PrivateRoutes'
 
 function App() {
   // State to track user
-  const [user, setUser] = useState({})
+ 
 
   return (
     <>
