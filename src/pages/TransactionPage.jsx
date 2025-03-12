@@ -1,23 +1,28 @@
-/* eslint-disable react/prop-types */
 import { Container } from "react-bootstrap";
-import TopNavbar from "../components/TopNavbar";
+import TopNavBar from "../components/TopNavBar";
 import TransactionForm from "../components/TransactionForm";
+import TransactionTable from "../components/TransactionTable";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchTransactions } from "../redux/transaction/transactionActions";
 
-const TransactionPage = (props) => {
-  const { user } = props
+/* eslint-disable react/prop-types */
+const TransactionPage = () => {
+  const dispatch = useDispatch();
 
-  const [transactions, setTransaction] = useState()
+  const { user } = useSelector((state) => state.user);
+  const { transactions } = useSelector((state) => state.transactions);
 
-  return ( 
-      <Container>
-        <TopNavbar userName={user.name} />
+  useEffect(() => {
+    dispatch(fetchTransactions(user.id));
+  }, [dispatch, transactions, user.id]);
+  return (
+    <Container>
+      <TopNavBar />
+      <TransactionForm />
+      <TransactionTable />
+    </Container>
+  );
+};
 
-        {/* Transaction Form */}
-        <TransactionForm userId={user.id} />
-
-        {/* Transaction Table */}
-      </Container>
-   );
-}
- 
 export default TransactionPage;

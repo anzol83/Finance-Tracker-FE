@@ -4,115 +4,96 @@ import { useState } from "react";
 import { createUser } from "../axios/userAxios";
 import { toast } from "react-toastify";
 
-const initialFormData = {
-  full_name: '',
-  email: '',
-  password: '',
-  confirm_password: '',
-}
-
 const SignupForm = () => {
-  const [formData, setFormData] = useState(initialFormData)
-  const { full_name, email, password, confirm_password } = formData
+  const initialFormData = {
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  };
+  const [formData, setFormData] = useState(initialFormData);
+  const { name, email, password, confirmPassword } = formData;
 
-  // State to implement loading flow
-  const [isLoading, setIsLoading] = useState(false)
+  // State to implement loading
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Handle on Change
   const handleOnChange = (e) => {
-    const { value, name } = e.target
+    const { value, name } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
 
-    setFormData({
-      ...formData,
-      [name]: value
-    })
-  }
+  const handleOnSubmit = async (e) => {
+    e.preventDefault();
+    // when button is clicked
 
-  // Handle Form Submit
-  const handleOnSubmit = async(e) => {
-    e.preventDefault()
+    setIsLoading(true);
 
-    // When button is cicked, update isLoading to true
-    setIsLoading(true)
-
-    // send an api request to create a user
-    const response = await createUser({
-      name: full_name,
-      email,
-      password,
-    })
-
-    // Once you get response, set isLoading to false
-    setIsLoading(false)
-
-    // Handle Error
-    if(response.status === "error"){
-      return toast.error(response.message)
+    // Send api request to create a user
+    const response = await createUser({ name, email, password });
+    // set is loading false when response is here
+    setIsLoading(false);
+    // Handle error
+    if (response.status === "error") {
+      return toast.error(response.message);
     }
-
-    // Handle Success
-    toast.success(response.message)
-  }
-
-  return ( 
+    // Handle success
+    toast.success(response.message);
+  };
+  return (
     <Form onSubmit={handleOnSubmit}>
-      <InputField 
+      <InputField
         label="Name"
         inputFieldAttributes={{
-          type: 'text',
-          name: 'full_name',
-          placeholder: 'Enter your full name',
+          type: "text",
+          name: "name",
+          placeholder: "Enter your full name",
           required: true,
-          value: full_name,
-          onChange: handleOnChange
+          value: name,
+          onChange: handleOnChange,
         }}
       />
 
-      <InputField 
+      <InputField
         label="Email"
         inputFieldAttributes={{
-          type: 'email',
-          name: 'email',
-          placeholder: 'Enter your email',
+          type: "email",
+          name: "email",
+          placeholder: "Enter your email",
           required: true,
           value: email,
-          onChange: handleOnChange
+          onChange: handleOnChange,
         }}
       />
 
-      <InputField 
+      <InputField
         label="Password"
         inputFieldAttributes={{
-          type: 'password',
-          name: 'password',
-          placeholder: 'Enter new password',
+          type: "password",
+          name: "password",
+          placeholder: "Enter new password",
           required: true,
           value: password,
-          onChange: handleOnChange
+          onChange: handleOnChange,
         }}
       />
 
-      <InputField 
+      <InputField
         label="Confirm Password"
         inputFieldAttributes={{
-          type: 'password',
-          name: 'confirm_password',
-          placeholder: 'Confirm password',
+          type: "password",
+          name: "confirmPassword",
+          placeholder: "Please confirm password",
           required: true,
-          value: confirm_password,
-          onChange: handleOnChange
+          value: confirmPassword,
+          onChange: handleOnChange,
         }}
       />
-      
-      <Button 
-        variant="primary" 
-        type="submit"
-        disabled={isLoading}
-      >
-        {isLoading ? 'Signing Up...' : 'Sign Up'}
+
+      <Button variant="primary" type="submit" disabled={isLoading}>
+        {isLoading ? "Signing Up . . ." : "Sign up"}
       </Button>
     </Form>
-   );
-}
- 
+  );
+};
+
 export default SignupForm;

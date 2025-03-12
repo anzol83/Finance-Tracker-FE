@@ -1,38 +1,34 @@
-import { Route, Routes } from 'react-router'
-import './App.css'
-import SignupPage from './pages/SignupPage'
-import 'react-toastify/dist/ReactToastify.css'
-import { ToastContainer } from 'react-toastify'
-import LoginPage from './pages/LoginPage'
-import TransactionPage from './pages/TransactionPage'
-import { useState } from 'react'
-import PrivateRoutes from './components/PrivateRoutes'
+import { Route, Routes } from "react-router-dom";
+import "./App.css";
+import SignupPage from "./pages/SignupPage";
+import LoginPage from "./pages/LoginPage";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import TransactionPage from "./pages/TransactionPage";
+import PrivateRoutes from "./components/PrivateRoutes";
 
 function App() {
-  // State to track user
- 
-
+  // state to track the user
   return (
     <>
       <Routes>
-        {/* Public Routes */}
-        <Route path="/signup" element={<SignupPage />}/>
-        <Route path='/login' element={<LoginPage setUser={setUser} />} />
-
+        {/* Public routes */}
+        <Route path="/" element={<SignupPage />} />
+        <Route path="signup" element={<SignupPage />} />
+        <Route path="login" element={<LoginPage />} />
         {/* Private Routes */}
-        <Route 
-          path='/transactions' 
+        <Route
+          path="/transactions"
           element={
-            <PrivateRoutes user={user}>
-              <TransactionPage user={user} />
+            <PrivateRoutes>
+              <TransactionPage />
             </PrivateRoutes>
           }
         />
       </Routes>
-
       <ToastContainer />
     </>
-  )
+  );
 }
 
-export default App
+export default App;

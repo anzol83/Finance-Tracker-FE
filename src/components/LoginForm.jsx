@@ -1,98 +1,69 @@
+/* eslint-disable react/prop-types */
 import { Button, Form } from "react-bootstrap";
 import InputField from "./InputField";
-import { useState } from "react";
-import { loginUser } from "../axios/userAxios";
-import { toast } from "react-toastify";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
+import { useDispatch, useSelector } from "react-redux";
+import { loginUsersAction } from "../redux/user/userActions.";
 
-const initialFormData = {
-  email: '',
-  password: ''
-}
-const LoginForm = (props) => {
-  const { setUser } = props
-
-  const [formData, setFormData] = useState(initialFormData)
-  const { email, password } = formData
-
-  // State to implement loading flow
-  const [isLoading, setIsLoading] = useState(false)
-
-  // Handle on Change
+const LoginForm = () => {
+  const initialFormData = { email: "", password: "" };
+  const [formData, setFormData] = useState(initialFormData);
+  const { email, password } = formData;
   const handleOnChange = (e) => {
-    const { value, name } = e.target
+    const { value, name } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
 
-    setFormData({
-      ...formData,
-      [name]: value
-    })
-  }
+  // Hook from react router to navigate between pages without clicking
+  const navigate = useNavigate();
+  // call use dispatch hook to get dispatch function
+  const dispatch = useDispatch();
 
-  // Hook from react router to navigate between pages
-  const navigate = useNavigate()
+  const handleOnSubmit = async (e) => {
+    e.preventDefault();
+    dispatch(loginUsersAction(email, password));
+  };
 
-  // Handle on Submit
-  const handleOnSubmit = async(e) => {
-    e.preventDefault()
-    // setisLoading to true
-    setIsLoading(true)
-    // send api request to try login
-    const response = await loginUser(email, password)
-
-    // setisLoading to false
-    setIsLoading(false)
-
-    // Handle Error
-    if(response.status === 'error'){
-      return toast.error(response.message)
+  // check if current user exists
+  // if exists please navigate to transaction page
+  const { user } = useSelector((state) => state.user);
+  useEffect(() => {
+    if (user.id) {
+      navigate("/transactions");
     }
-
-    // Handle Success
-    // show toast message
-    toast.success(response.message)
-
-    // set User
-    setUser(response.data)
-
-    // Navigate to transactions page
-    navigate("/transactions")
-  }
-
-  return ( 
+  }, [user, navigate]);
+  return (
     <Form onSubmit={handleOnSubmit}>
-      <InputField 
+      <InputField
         label="Email"
         inputFieldAttributes={{
-          type: 'email',
-          name: 'email',
-          placeholder: 'Enter your email',
+          type: "email",
+          name: "email",
+          placeholder: "Enter your email",
           required: true,
           value: email,
-          onChange: handleOnChange
+          onChange: handleOnChange,
         }}
       />
 
-      <InputField 
+      <InputField
         label="Password"
         inputFieldAttributes={{
-          type: 'password',
-          name: 'password',
-          placeholder: 'Enter new password',
+          type: "password",
+          name: "password",
+          placeholder: "Enter new password",
           required: true,
           value: password,
-          onChange: handleOnChange
+          onChange: handleOnChange,
         }}
       />
 
-      <Button 
-        variant="primary" 
-        type="submit"
-        disabled={isLoading}
-      >
-        {isLoading ? 'Loging In...' : 'Login'}
+      <Button variant="primary" type="submit">
+        Login
       </Button>
     </Form>
-   );
-}
- 
+  );
+};
+
 export default LoginForm;

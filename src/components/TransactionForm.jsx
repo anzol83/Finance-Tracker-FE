@@ -1,106 +1,107 @@
+/* eslint-disable react/prop-types */
 import { useState } from "react";
 import { Button, Card, Col, Form, Row } from "react-bootstrap";
 import InputField from "./InputField";
-import { createTransaction } from "../axios/transactionAxios";
 import { toast } from "react-toastify";
+import { createTransaction } from "../axios/transactionAxios";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchTransactions } from "../redux/transaction/transactionActions";
 
-const initialFormData = {
-  title: '',
-  type: 'expense',
-  amount: 0,
-  date: null,
-}
+const TransactionForm = () => {
+  const { user } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  const initialFormData = {
+    title: "",
+    type: "expense",
+    amount: 0,
+    date: null,
+  };
 
-const TransactionForm = (props) => {
-  const { userId } = props
-
-  const [formData, setFormData] = useState(initialFormData)
-  const {title, type, amount, date } = formData
+  const [formData, setFormData] = useState(initialFormData);
+  const { title, type, amount, date } = formData;
 
   // Handle on Change
   const handleOnChange = (e) => {
-    const { value, name } = e.target
+    const { value, name } = e.target;
 
     setFormData({
       ...formData,
-      [name]: value
-    })
-  }
+      [name]: value,
+    });
+  };
 
   // handleOnSubmit
-  const handleOnSubmit = async(e) => {
-    e.preventDefault()
+  const handleOnSubmit = async (e) => {
+    e.preventDefault();
 
     //send API request
-    const response = await createTransaction({ ...formData, userId })
+    const response = await createTransaction(user.id, {
+      ...formData,
+      userId: user.id,
+    });
 
     // Handle Error
-    if(response.status === "error"){
-      return toast.error(response.message)
+    if (response.status === "error") {
+      return toast.error(response.message);
     }
     // Handle Success
-    toast.success(response.message)
-  }
-  
-  return ( 
+    toast.success(response.message);
+    dispatch(fetchTransactions(user.id));
+  };
+
+  return (
     <Card>
       <Card.Body>
         <Form onSubmit={handleOnSubmit}>
           <Row>
             <Col>
-              <InputField 
+              <InputField
                 label="Title"
                 inputFieldAttributes={{
-                  type: 'text',
-                  name: 'title',
-                  placeholder: 'Enter transaction title',
+                  type: "text",
+                  name: "title",
+                  placeholder: "Enter transaction title",
                   required: true,
                   value: title,
-                  onChange: handleOnChange
+                  onChange: handleOnChange,
                 }}
               />
             </Col>
 
             <Col>
-                <Form.Group>
-                  <Form.Label className="fw-bold">
-                    Type
-                  </Form.Label>
-                  <Form.Select
-                    name="type"
-                    value={type}
-                    onChange={handleOnChange}
-                  >
-                    <option value="expense">Expense</option>
-                    <option value="income">Income</option>
-                  </Form.Select>
-                </Form.Group>
+              <Form.Group>
+                <Form.Label className="fw-bold">Type</Form.Label>
+                <Form.Select name="type" value={type} onChange={handleOnChange}>
+                  <option value="expense">Expense</option>
+                  <option value="income">Income</option>
+                </Form.Select>
+              </Form.Group>
             </Col>
           </Row>
 
           <Row>
             <Col>
-              <InputField 
+              <InputField
                 label="Amount"
                 inputFieldAttributes={{
-                  type: 'number',
-                  name: 'amount',
+                  type: "number",
+                  name: "amount",
                   required: true,
                   value: amount,
-                  onChange: handleOnChange
+                  onChange: handleOnChange,
                 }}
               />
             </Col>
 
             <Col>
-              <InputField 
+              <InputField
                 label="Date"
                 inputFieldAttributes={{
-                  type: 'date',
-                  name: 'date',
+                  type: "date",
+                  name: "date",
                   required: true,
                   value: date,
-                  onChange: handleOnChange
+                  onChange: handleOnChange,
                 }}
               />
             </Col>
@@ -114,7 +115,7 @@ const TransactionForm = (props) => {
         </Form>
       </Card.Body>
     </Card>
-   );
-}
- 
+  );
+};
+
 export default TransactionForm;
