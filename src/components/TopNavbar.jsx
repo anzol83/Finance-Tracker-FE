@@ -1,4 +1,4 @@
-/* eslint-disable react/prop-types */
+
 import { Button, Container, Navbar, NavLink } from "react-bootstrap";
 import { useSelector } from "react-redux";
 

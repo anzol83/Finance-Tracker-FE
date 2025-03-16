@@ -1,28 +1,25 @@
+import axios from "axios"
+
 // API SERVER URL
-import axios from "axios";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
+const userEndpoint = '/api/users'
 
-const API_BASE_URL = import.meta.env.PROD
-  ? ""
-  : import.meta.env.VITE_BASE_API_URL;
+const API_URL = API_BASE_URL + userEndpoint
 
-const USER_ENDPOINT = "/api/users";
+// Signup User | Create User | POST
+export const createUser = (userObj) => {
+  const response = axios.post(`${API_URL}/signup`, userObj)
+                    .then((res)=> res.data)
+                    .catch((error) => console.log(error))
 
-// CREATE | Signup User | POST
-export const createUser = (userObject) => {
-  const response = axios
-    .post(`${API_BASE_URL}${USER_ENDPOINT}/signup`, userObject)
-    .then((res) => res.data)
-    .catch((error) => console.log(error));
+  return response
+}
 
-  return response;
-};
-
-// CREATE | Login user | POST
-
+// Login User | Login User | Finding user in db | POST
 export const loginUser = (email, password) => {
-  const response = axios
-    .post(`${API_BASE_URL}${USER_ENDPOINT}/login`, { email, password })
-    .then((res) => res.data)
-    .catch((error) => console.log(error));
-  return response;
-};
+  const response = axios.post(`${API_URL}/login`, { email, password })
+                    .then((res)=> res.data)
+                    .catch((error) => console.log(error))
+
+  return response
+}

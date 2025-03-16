@@ -1,4 +1,4 @@
-/* eslint-disable react/prop-types */
+
 import { useState } from "react";
 import { Button, Card, Col, Form, Row } from "react-bootstrap";
 import InputField from "./InputField";
