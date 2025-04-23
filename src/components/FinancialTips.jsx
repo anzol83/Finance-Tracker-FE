@@ -67,7 +67,7 @@ const FinancialTips = () => {
       setShowQuote(
         financialTips[Math.floor(Math.random() * financialTips.length)]
       );
-    }, 3000);
+    }, 5000);
   }, []);
 
   const { tip, quote, expert } = showQuote;
@@ -80,7 +80,7 @@ const FinancialTips = () => {
         {/* <GrMoney className="text-success " style={{fontSize:'10rem'}}/> */}
         <img src="/moneygrow.jpg" className="pulse" alt="Money" style={{height:"300px",width:"300px"}} />
       </div>
-      <div>Watch your Money grow </div>
+      <div>Watch your Money grow</div>
       <h4>{tip}</h4>
       <div className="fw-bolder">
         " {quote} " - {expert}

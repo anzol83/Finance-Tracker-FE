@@ -1,99 +1,117 @@
-import { Button, Form } from "react-bootstrap";
-import InputField from "./InputField";
-import { useState } from "react";
-import { createUser } from "../axios/userAxios";
-import { toast } from "react-toastify";
+import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
+import CustomInput from "./CustomInput";
+import { toast, Bounce } from "react-toastify";
+import { postNewUser } from "../../helpers/axiosHelper";
+import useForm from "../hooks/useForm";
+import { Link } from "react-router-dom";
 
-const SignupForm = () => {
-  const initialFormData = {
-    name: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-  };
-  const [formData, setFormData] = useState(initialFormData);
-  const { name, email, password, confirmPassword } = formData;
+const initialState = {
+  name: "",
+  email: "",
+  password: "",
+  confirmPassword: "",
+};
+const SignUpForm = () => {
+  const { form, setForm, handleOnChange } = useForm(initialState);
 
-  // State to implement loading
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleOnChange = (e) => {
-    const { value, name } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
+  const fields = [
+    {
+      label: "Name",
+      placeholder: "Enter your full name",
+      required: true,
+      type: "text",
+      name: "name",
+      value: form.name,
+    },
+    {
+      label: "Email",
+      placeholder: "Enter your email",
+      required: true,
+      type: "email",
+      name: "email",
+      value: form.email,
+    },
+    {
+      label: "Password",
+      placeholder: "******",
+      required: true,
+      type: "password",
+      name: "password",
+      value: form.password,
+    },
+    {
+      label: "Confirm Password",
+      placeholder: "******",
+      required: true,
+      type: "password",
+      name: "confirmPassword",
+      value: form.confirmPassword,
+    }
+  ];
 
   const handleOnSubmit = async (e) => {
     e.preventDefault();
-    // when button is clicked
 
-    setIsLoading(true);
+    const { confirmPassword, password, ...rest } = form;
 
-    // Send api request to create a user
-    const response = await createUser({ name, email, password });
-    // set is loading false when response is here
-    setIsLoading(false);
-    // Handle error
-    if (response.status === "error") {
-      return toast.error(response.message);
+    // Ensure password and confirmPassword are included
+    if (!password || !confirmPassword) {
+      return toast.error("Password and confirm password are required");
     }
-    // Handle success
-    toast.success(response.message);
+
+    if (confirmPassword !== password) {
+      return toast.error("Passwords do not match");
+    }
+
+    const passwordRegex =
+      /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*()_+={}\[\]:;"'<>,.?/\\|-]).{8,}$/;
+    if (!passwordRegex.test(password)) {
+      return toast.error("Password must be strong");
+    }
+
+    const userData = {
+      name: form.name,
+      email: form.email,
+      password: form.password, // Ensure password is included
+      confirmPassword: form.confirmPassword, // Confirm password if needed
+    };
+
+    const pending = postNewUser(userData); // Submit with all fields
+    toast.promise(pending, { pending: "Please wait..." });
+
+    const { status, message } = await pending;
+
+    toast[status](message);
+
+    status === "success" && setForm(initialState);
   };
+
+
   return (
-    <Form onSubmit={handleOnSubmit}>
-      <InputField
-        label="Name"
-        inputFieldAttributes={{
-          type: "text",
-          name: "name",
-          placeholder: "Enter your full name",
-          required: true,
-          value: name,
-          onChange: handleOnChange,
-        }}
-      />
-
-      <InputField
-        label="Email"
-        inputFieldAttributes={{
-          type: "email",
-          name: "email",
-          placeholder: "Enter your email",
-          required: true,
-          value: email,
-          onChange: handleOnChange,
-        }}
-      />
-
-      <InputField
-        label="Password"
-        inputFieldAttributes={{
-          type: "password",
-          name: "password",
-          placeholder: "Enter new password",
-          required: true,
-          value: password,
-          onChange: handleOnChange,
-        }}
-      />
-
-      <InputField
-        label="Confirm Password"
-        inputFieldAttributes={{
-          type: "password",
-          name: "confirmPassword",
-          placeholder: "Please confirm password",
-          required: true,
-          value: confirmPassword,
-          onChange: handleOnChange,
-        }}
-      />
-
-      <Button variant="primary" type="submit" disabled={isLoading}>
-        {isLoading ? "Signing Up . . ." : "Sign up"}
-      </Button>
-    </Form>
+    <div className="border rounded p-4 m-2">
+      <h4 className="mb-5">Sign up Quickly! </h4>
+      <Form onSubmit={handleOnSubmit}>
+        {fields.map((input) => (
+          <CustomInput key={input.name} {...input} onChange={handleOnChange} />
+        ))}
+        <div className="d-flex justify-content-end">
+          <Form.Check label="suscribe to us" />
+        </div>
+        <div className="d-grid mt-2">
+          <Button variant="primary" type="submit">
+            Submit
+          </Button>
+        </div>
+        <div className="text-center pt-3">
+          Have an account?
+          <Link to={"/login"}>
+            <b className="mx-3">Login Here</b>
+          </Link>
+        </div>
+      </Form>
+    </div>
   );
 };
 
-export default SignupForm;
+export default SignUpForm;

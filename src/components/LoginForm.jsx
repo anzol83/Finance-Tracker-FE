@@ -1,68 +1,84 @@
-
-import { Button, Form } from "react-bootstrap";
-import InputField from "./InputField";
+import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
+import CustomInput from "./CustomInput";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
-import { useDispatch, useSelector } from "react-redux";
-import { loginUsersAction } from "../redux/user/userActions.";
-
+import { toast, Bounce } from "react-toastify";
+import { loginUser, postNewUser } from "../../helpers/axiosHelper";
+import { useUser } from "../context/UserContext";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+const initialState = {
+  email: "",
+  password: "",
+};
 const LoginForm = () => {
-  const initialFormData = { email: "", password: "" };
-  const [formData, setFormData] = useState(initialFormData);
-  const { email, password } = formData;
-  const handleOnChange = (e) => {
-    const { value, name } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
-  // Hook from react router to navigate between pages without clicking
+  const location = useLocation();
   const navigate = useNavigate();
-  // call use dispatch hook to get dispatch function
-  const dispatch = useDispatch();
+  const { user, setUser } = useUser();
+  const [form, setForm] = useState(initialState);
+
+  const goTO = location?.state?.from?.pathname || "/dashboard";
+
+  useEffect(() => {
+    user?._id && navigate(goTO);
+  }, [user?._id, navigate]);
+
+  const fields = [
+    {
+      label: "Email",
+      placeholder: "ishwor@email.com",
+      required: true,
+      type: "email",
+      name: "email",
+    },
+    {
+      label: "Password",
+      placeholder: "******",
+      required: true,
+      type: "password",
+      name: "password",
+    },
+  ];
+
+  const handleOnChange = (e) => {
+    const { name, value } = e.target;
+    setForm({
+      ...form,
+      [name]: value,
+    });
+  };
 
   const handleOnSubmit = async (e) => {
     e.preventDefault();
-    dispatch(loginUsersAction(email, password));
+    const pendingRequest = loginUser(form);
+
+    toast.promise(pendingRequest, {
+      pending: "please wait ....",
+    });
+    const { status, message, user, accessJWT } = await pendingRequest;
+
+    toast[status](message);
+    setUser(user);
+    localStorage.setItem("accessJWT", accessJWT);
   };
-
-  // check if current user exists
-  // if exists please navigate to transaction page
-  const { user } = useSelector((state) => state.user);
-  useEffect(() => {
-    if (user.id) {
-      navigate("/transactions");
-    }
-  }, [user, navigate]);
   return (
-    <Form onSubmit={handleOnSubmit}>
-      <InputField
-        label="Email"
-        inputFieldAttributes={{
-          type: "email",
-          name: "email",
-          placeholder: "Enter your email",
-          required: true,
-          value: email,
-          onChange: handleOnChange,
-        }}
-      />
-
-      <InputField
-        label="Password"
-        inputFieldAttributes={{
-          type: "password",
-          name: "password",
-          placeholder: "Enter new password",
-          required: true,
-          value: password,
-          onChange: handleOnChange,
-        }}
-      />
-
-      <Button variant="primary" type="submit">
-        Login
-      </Button>
-    </Form>
+    <div className="border rounded p-4">
+      <h4 className="mb-5">Login In Quickly! </h4>
+      <Form onSubmit={handleOnSubmit}>
+        {fields.map((input) => (
+          <CustomInput key={input.name} {...input} onChange={handleOnChange} />
+        ))}
+        <div className="d-grid">
+          <Button variant="primary" type="submit">
+            Submit
+          </Button>
+        </div>
+        <div className="text-center pt-3">
+          Dont have an account ? 
+          <Link to="/signup">
+          <b className="mx-3">Signup here</b></Link>
+        </div>
+      </Form>
+    </div>
   );
 };
 
