@@ -1,98 +1,113 @@
-import React, { useState } from "react";
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import { FaFacebookF, FaLinkedin } from "react-icons/fa";
-import { toast } from "react-toastify";
+
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { FaFacebookF, FaLinkedin } from 'react-icons/fa';
+import { Send } from 'lucide-react';
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/components/ui/use-toast";
 
 const Footer = () => {
   const [email, setEmail] = useState("");
+  const { toast } = useToast();
 
-  const handleOnChange = (e) => {
-    setEmail(e.target.value);
-  };
-
-  const handleOnSubscribe = (e) => {
+  const handleSubscribe = (e) => {
     e.preventDefault();
-    toast.success("🎉 Thank you for subscribing. Stay updated!");
+    toast({
+      title: "Subscribed!",
+      description: "🎉 Thank you for subscribing. Stay updated!",
+    });
     setEmail("");
   };
 
+  const quickLinks = [
+    { href: "/", label: "Home" },
+    { href: "/dashboard", label: "Dashboard" },
+    { href: "/features", label: "Features" },
+    { href: "/contact", label: "Contact" },
+  ];
+
   return (
-    <Container fluid className="bg-dark text-white p-5 mt-5">
-      <Row className="text-center text-md-start">
-        {/* Newsletter */}
-        <Col md={4} className="mb-4">
-          <h5 className="text-uppercase">Newsletter</h5>
-          <form onSubmit={handleOnSubscribe} className="d-flex mt-3">
-            <input
-              type="email"
-              placeholder="Enter your email"
-              className="form-control me-2 rounded"
-              value={email}
-              onChange={handleOnChange}
-              required
-            />
-            <button type="submit" className="btn btn-primary">
-              Subscribe
-            </button>
-          </form>
-        </Col>
-
-        {/* Quick Links */}
-        <Col md={4} className="mb-4">
-          <h5 className="text-uppercase">Quick Links</h5>
-          <ul className="list-unstyled mt-3">
-            <li><a href="#home" className="text-white text-decoration-none">Home</a></li>
-            <li><a href="#dashboard" className="text-white text-decoration-none">Dashboard</a></li>
-            <li><a href="#features" className="text-white text-decoration-none">Features</a></li>
-            <li><a href="#contact" className="text-white text-decoration-none">Contact</a></li>
-          </ul>
-        </Col>
-
-        {/* Socials */}
-        <Col md={4} className="mb-4 text-center text-md-start">
-          <h5 className="text-uppercase">Follow Us</h5>
-          <div className="d-flex gap-3 fs-4 mt-3 justify-content-center justify-content-md-start">
-            <a
-              href="https://www.facebook.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-white"
-            >
-              <FaFacebookF />
-            </a>
-            <a
-              href="https://www.linkedin.com/in/anzol-neupane-276894250/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-white"
-            >
-              <FaLinkedin />
-            </a>
+    <footer className="bg-primary text-primary-foreground mt-auto">
+      <div className="max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {/* Newsletter Section */}
+          <div className="space-y-4">
+            <h5 className="text-lg font-semibold uppercase">Newsletter</h5>
+            <form onSubmit={handleSubscribe} className="flex gap-2">
+              <Input
+                type="email"
+                placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="bg-primary-foreground/10 border-primary-foreground/20"
+              />
+              <Button type="submit" variant="secondary" size="icon">
+                <Send className="h-4 w-4" />
+              </Button>
+            </form>
           </div>
-        </Col>
-      </Row>
 
-      <hr className="border-light" />
+          {/* Quick Links Section */}
+          <div className="space-y-4">
+            <h5 className="text-lg font-semibold uppercase">Quick Links</h5>
+            <ul className="space-y-2">
+              {quickLinks.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    to={link.href}
+                    className="hover:text-primary-foreground/80 transition-colors"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
 
-      <Row>
-        <Col className="text-center py-2">
-          <small>
-            &copy; 2025 <strong>Finance Tracker</strong>. All rights reserved. <br />
+          {/* Social Links Section */}
+          <div className="space-y-4">
+            <h5 className="text-lg font-semibold uppercase">Follow Us</h5>
+            <div className="flex gap-4">
+              <a
+                href="https://www.facebook.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-primary-foreground/80 transition-colors"
+              >
+                <FaFacebookF className="h-6 w-6" />
+              </a>
+              <a
+                href="https://www.linkedin.com/in/anzol-neupane-276894250/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-primary-foreground/80 transition-colors"
+              >
+                <FaLinkedin className="h-6 w-6" />
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div className="border-t border-primary-foreground/10 mt-8 pt-8 text-center">
+          <p className="text-sm">
+            &copy; 2025 <span className="font-semibold">Finance Tracker</span>. All rights reserved.
+          </p>
+          <p className="text-sm mt-2">
             Made with ❤️ by{" "}
             <a
               href="https://www.linkedin.com/in/anzol-neupane-276894250/"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-decoration-underline text-primary"
+              className="underline hover:text-primary-foreground/80 transition-colors"
             >
               Angel Neupane
             </a>
-          </small>
-        </Col>
-      </Row>
-    </Container>
+          </p>
+        </div>
+      </div>
+    </footer>
   );
 };
 
