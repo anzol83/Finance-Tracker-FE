@@ -1,120 +1,87 @@
-
-import { useState } from "react";
-import { Button, Card, Col, Form, Row } from "react-bootstrap";
-import InputField from "./InputField";
+import React, { useState } from "react";
+import useForm from "../hooks/useForm";
+import { Button, Form, Toast } from "react-bootstrap";
+import CustomInput from "./CustomInput";
+import { postNewTransaction } from "../../helpers/axiosHelper.js";
 import { toast } from "react-toastify";
-import { createTransaction } from "../axios/transactionAxios";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchTransactions } from "../redux/transaction/transactionActions";
-
+import { useUser } from "../context/UserContext.jsx";
+const initialState = {
+  type: "",
+  amount: "",
+  date: "",
+  description: "",
+};
 const TransactionForm = () => {
-  const { user } = useSelector((state) => state.user);
-  const dispatch = useDispatch();
-  const initialFormData = {
-    title: "",
-    type: "expense",
-    amount: 0,
-    date: null,
-  };
+  const { form, setForm, handleOnChange } = useForm(initialState);
+  const { getTransactions, toogleModal } = useUser();
 
-  const [formData, setFormData] = useState(initialFormData);
-  const { title, type, amount, date } = formData;
-
-  // Handle on Change
-  const handleOnChange = (e) => {
-    const { value, name } = e.target;
-
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
-
-  // handleOnSubmit
   const handleOnSubmit = async (e) => {
     e.preventDefault();
-
-    //send API request
-    const response = await createTransaction(user.id, {
-      ...formData,
-      userId: user.id,
+   
+    const pending = postNewTransaction(form);
+    toast.promise(pending, {
+      pending: "please wait",
     });
+    const { status, message } = await pending;
+    toast[status](message);
 
-    // Handle Error
-    if (response.status === "error") {
-      return toast.error(response.message);
+    if (status === "success") {
+      setForm(initialState);
+      getTransactions();
+      toogleModal(false);
     }
-    // Handle Success
-    toast.success(response.message);
-    dispatch(fetchTransactions(user.id));
   };
 
+  const fields = [
+    {
+      label: "Description",
+      placeholder: "Salary",
+      required: true,
+      type: "text",
+      name: "description",
+      value: form.description,
+    },
+    {
+      label: "Amount",
+      placeholder: "44",
+      required: true,
+      type: "number",
+      name: "amount",
+      value: form.amount,
+      min:1
+    },
+    {
+      label: "Transaction Date",
+
+      required: true,
+      type: "date",
+      name: "date",
+      value: form.date,
+    },
+  ];
   return (
-    <Card>
-      <Card.Body>
-        <Form onSubmit={handleOnSubmit}>
-          <Row>
-            <Col>
-              <InputField
-                label="Title"
-                inputFieldAttributes={{
-                  type: "text",
-                  name: "title",
-                  placeholder: "Enter transaction title",
-                  required: true,
-                  value: title,
-                  onChange: handleOnChange,
-                }}
-              />
-            </Col>
+    <div className="border rounded p-4">
+      <h4 className="mb-5">Add your transaction!</h4>
+      <Form onSubmit={handleOnSubmit}>
+        <Form.Group className="mb-3">
+          <Form.Label>Transaction type</Form.Label>
+          <Form.Select name="type" onChange={handleOnChange} required>
+            <option value="">-- select --</option>
+            <option value="Income">Income</option>
+            <option value="Expense">Expense</option>
+          </Form.Select>
+        </Form.Group>
+        {fields.map((input) => (
+          <CustomInput key={input.name} {...input} onChange={handleOnChange} />
+        ))}
 
-            <Col>
-              <Form.Group>
-                <Form.Label className="fw-bold">Type</Form.Label>
-                <Form.Select name="type" value={type} onChange={handleOnChange}>
-                  <option value="expense">Expense</option>
-                  <option value="income">Income</option>
-                </Form.Select>
-              </Form.Group>
-            </Col>
-          </Row>
-
-          <Row>
-            <Col>
-              <InputField
-                label="Amount"
-                inputFieldAttributes={{
-                  type: "number",
-                  name: "amount",
-                  required: true,
-                  value: amount,
-                  onChange: handleOnChange,
-                }}
-              />
-            </Col>
-
-            <Col>
-              <InputField
-                label="Date"
-                inputFieldAttributes={{
-                  type: "date",
-                  name: "date",
-                  required: true,
-                  value: date,
-                  onChange: handleOnChange,
-                }}
-              />
-            </Col>
-          </Row>
-
-          <Row>
-            <Button variant="primary" type="submit">
-              Add Transaction
-            </Button>
-          </Row>
-        </Form>
-      </Card.Body>
-    </Card>
+        <div className="d-grid">
+          <Button variant="primary" type="submit">
+            Submit
+          </Button>
+        </div>
+      </Form>
+    </div>
   );
 };
 
