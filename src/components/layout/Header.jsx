@@ -1,186 +1,150 @@
-
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { ImExit, TbLogin, IoCreate } from 'react-icons/fa';
-import { MdDashboard, MdContactSupport } from 'react-icons/md';
-import { GrTransaction } from 'react-icons/gr';
-import { useUser } from '../context/UserContext';
-import { Button } from "@/components/ui/button";
-
+import Container from "react-bootstrap/Container";
+import Nav from "react-bootstrap/Nav";
+import Navbar from "react-bootstrap/Navbar";
+import { Link, Navigate, useNavigate } from "react-router-dom";
+import { ImExit } from "react-icons/im";
+import { TbLogin } from "react-icons/tb";
+import { IoCreate } from "react-icons/io5";
+import { MdDashboard } from "react-icons/md";
+import { GrTransaction } from "react-icons/gr";
+import { useUser } from "../../context/UserContext.jsx";
+import { MdContactSupport } from "react-icons/md";
+import { useState } from "react";
 export const Header = () => {
   const { user, setUser } = useUser();
   const [menu, showMenu] = useState(false);
-  const navigate = useNavigate();
-
-  const handleOnLogout = () => {
+  function handleOnLogout() {
     localStorage.removeItem("accessJWT");
     setUser({});
     showMenu(false);
-  };
+  }
+
+  const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate("/");
+    navigate("");
   };
 
   return (
-    <nav className="bg-primary text-primary-foreground shadow-md">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
-          <div 
-            className="flex-shrink-0 flex items-center gap-3 cursor-pointer" 
+    <Navbar
+      expand="lg"
+      variant="dark"
+      aria-haspopup
+      className="bg-body-dark"
+      expanded={menu}
+    >
+      <Container className=" p-md-3">
+        <Navbar.Brand
+          href="#home"
+          className="d-flex gap-2 align-items-center fs-md-4"
+        >
+          <img
+            className=""
+            src="/bank.png"
+            height={"60px"}
+            alt="logo"
             onClick={handleClick}
-          >
-            <img 
-              src="/bank.png" 
-              alt="logo" 
-              className="h-10 w-auto" 
-            />
-            <span className="text-lg font-semibold">Finance Tracker</span>
-          </div>
+          />
 
-          {/* Mobile Menu Toggle */}
-          <div className="md:hidden flex items-center">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => showMenu(!menu)}
-            >
-              {menu ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-            </Button>
-          </div>
+          <div onClick={handleClick}>Finance Tracker</div>
+        </Navbar.Brand>
 
-          {/* Desktop Menu */}
-          <div className="hidden md:flex items-center space-x-4">
+        <Navbar.Toggle
+          aria-controls="basic-navbar-nav"
+          onClick={() => {
+            menu ? showMenu(false) : showMenu(true);
+          }}
+        />
+        <Navbar.Collapse id="basic-navbar-nav">
+          <Nav className="ms-auto text-light text-center">
             {user?._id ? (
               <>
-                <Link 
-                  to="/dashboard" 
-                  className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-primary/90 transition-colors"
-                  onClick={() => showMenu(false)}
+                <Link
+                  onClick={() => {
+                    showMenu(false);
+                  }}
+                  className="nav-link text-light"
+                  to="/dashboard"
                 >
                   <MdDashboard /> Dashboard
                 </Link>
-                <Link 
+                <Link
+                  onClick={() => {
+                    showMenu(false);
+                  }}
+                  className="nav-link text-light"
                   to="/transaction"
-                  className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-primary/90 transition-colors" 
-                  onClick={() => showMenu(false)}
                 >
-                  <GrTransaction /> Transaction
+                  <GrTransaction />
+                  Transaction
                 </Link>
-                <Link 
+                <Link
+                  onClick={() => {
+                    showMenu(false);
+                  }}
+                  className="nav-link text-light"
                   to="/contact"
-                  className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-primary/90 transition-colors"
-                  onClick={() => showMenu(false)}
                 >
-                  <MdContactSupport /> Contact Us
+                  <MdContactSupport />
+                  Contact Us
                 </Link>
-                <Button 
-                  variant="destructive" 
-                  onClick={handleOnLogout}
-                  className="flex items-center gap-2"
-                >
-                  <ImExit /> Logout
-                </Button>
+                <div className="d-flex justify-content-center">
+                  <Link
+                    onClick={handleOnLogout}
+                    className="nav-link text-dark bg-warning rounded px-2 "
+                    to="/"
+                  >
+                    <ImExit />
+                    Logout
+                  </Link>
+                </div>
               </>
             ) : (
               <>
-                <Link 
-                  to="/"
-                  className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-primary/90 transition-colors"
-                  onClick={() => showMenu(false)}
+                <Link
+                  onClick={() => {
+                    showMenu(false);
+                  }}
+                  className="nav-link text-light"
+                  to=""
                 >
                   Home
                 </Link>
-                <Link 
+                <Link
+                  onClick={() => {
+                    showMenu(false);
+                  }}
+                  className="nav-link text-light"
                   to="/contact"
-                  className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-primary/90 transition-colors"
-                  onClick={() => showMenu(false)}
                 >
                   Contact Us
                 </Link>
-                <Link to="/login">
-                  <Button variant="ghost" className="flex items-center gap-2">
-                    <TbLogin /> Login
-                  </Button>
+                <Link
+                  onClick={() => {
+                    showMenu(false);
+                  }}
+                  className="nav-link text-light"
+                  to="/login"
+                >
+                  <TbLogin />
+                  Login
                 </Link>
-                <Link to="/signup">
-                  <Button variant="secondary" className="flex items-center gap-2">
-                    <IoCreate /> Sign up
-                  </Button>
+                <Link
+                  onClick={() => {
+                    showMenu(false);
+                  }}
+                  className="nav-link text-light rounded bg-primary"
+                  to="/signup"
+                >
+                  <IoCreate />
+                  Sign up
                 </Link>
               </>
             )}
-          </div>
-        </div>
-
-        {/* Mobile Menu */}
-        {menu && (
-          <div className="md:hidden">
-            <div className="px-2 pt-2 pb-3 space-y-1">
-              {user?._id ? (
-                <>
-                  <Link 
-                    to="/dashboard" 
-                    className="block px-3 py-2 rounded-md hover:bg-primary/90"
-                    onClick={() => showMenu(false)}
-                  >
-                    <MdDashboard /> Dashboard
-                  </Link>
-                  <Link 
-                    to="/transaction"
-                    className="block px-3 py-2 rounded-md hover:bg-primary/90" 
-                    onClick={() => showMenu(false)}
-                  >
-                    <GrTransaction /> Transaction
-                  </Link>
-                  <Link 
-                    to="/contact"
-                    className="block px-3 py-2 rounded-md hover:bg-primary/90"
-                    onClick={() => showMenu(false)}
-                  >
-                    <MdContactSupport /> Contact Us
-                  </Link>
-                  <Button 
-                    variant="destructive" 
-                    onClick={handleOnLogout}
-                    className="w-full"
-                  >
-                    <ImExit /> Logout
-                  </Button>
-                </>
-              ) : (
-                <>
-                  <Link 
-                    to="/"
-                    className="block px-3 py-2 rounded-md hover:bg-primary/90"
-                    onClick={() => showMenu(false)}
-                  >
-                    Home
-                  </Link>
-                  <Link 
-                    to="/contact"
-                    className="block px-3 py-2 rounded-md hover:bg-primary/90"
-                    onClick={() => showMenu(false)}
-                  >
-                    Contact Us
-                  </Link>
-                  <Link to="/login">
-                    <Button variant="ghost" className="w-full">
-                      <TbLogin /> Login
-                    </Button>
-                  </Link>
-                  <Link to="/signup">
-                    <Button variant="secondary" className="w-full">
-                      <IoCreate /> Sign up
-                    </Button>
-                  </Link>
-                </>
-              )}
-            </div>
-          </div>
-        )}
-      </div>
-    </nav>
+          </Nav>
+        </Navbar.Collapse>
+      </Container>
+    </Navbar>
   );
 };
 
