@@ -33,7 +33,7 @@ const AiSuggestions = () => {
         data: {
           question:
             JSON.stringify(filtred) +
-            " anylaze this data and give me financial suggestion how money can be utilized in 4 points in  80 words answer will look like this    <h5>Suggestions</h5> 4* <li>  you can give some colours in tags to make sense to show red flag",
+            " analyze this data and give me financial suggestion how money can be utilized in 4 points in  80 words answer will look like this    <h5>Suggestions</h5> 4* <li>  you can give some colours in tags to make sense to show red flag",
         },
       });
 

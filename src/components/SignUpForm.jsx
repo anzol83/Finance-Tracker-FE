@@ -96,7 +96,7 @@ const SignUpForm = () => {
           <CustomInput key={input.name} {...input} onChange={handleOnChange} />
         ))}
         <div className="d-flex justify-content-end">
-          <Form.Check label="suscribe to us" />
+          <Form.Check label="subscribe to us" />
         </div>
         <div className="d-grid mt-2">
           <Button variant="primary" type="submit">

@@ -46,7 +46,7 @@ export const Header = () => {
             onClick={handleClick}
           />
 
-          <div onClick={handleClick}>Expense Tracker</div>
+          <div onClick={handleClick}>Finance Tracker</div>
         </Navbar.Brand>
 
         <Navbar.Toggle

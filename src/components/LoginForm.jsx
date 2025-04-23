@@ -25,7 +25,7 @@ const LoginForm = () => {
   const fields = [
     {
       label: "Email",
-      placeholder: "ishwor@email.com",
+      placeholder: "Enter your email",
       required: true,
       type: "email",
       name: "email",
