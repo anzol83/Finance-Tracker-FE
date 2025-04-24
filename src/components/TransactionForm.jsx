@@ -43,7 +43,7 @@ const TransactionForm = () => {
     },
     {
       label: "Amount",
-      placeholder: "44",
+      placeholder: "100",
       required: true,
       type: "number",
       name: "amount",

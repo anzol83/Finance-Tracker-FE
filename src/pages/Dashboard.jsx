@@ -14,7 +14,7 @@ const Dashboard = () => {
           {user?.name && (
             <div className="text-warning pb-3">
               <h3 className="fs-2">
-                Welcome {user?.name?.split(" ")[0] || "Guest"}
+                Welcome {user?.name?.split(" ")[0] || "Guest"},
               </h3>
             </div>
           )}
