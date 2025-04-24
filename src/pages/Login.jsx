@@ -4,7 +4,7 @@ import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import { FaArrowUpShortWide } from "react-icons/fa6";
 import { FaArrowTrendDown } from "react-icons/fa6";
-import LoginForm from "../components/LogInForm.jsx";
+import LoginForm from "../components/LoginForm.jsx";
 
 const Login = () => {
   return (
