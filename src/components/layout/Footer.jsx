@@ -44,7 +44,7 @@ const Footer = () => {
             <a href="https://www.twitter.com/az_anzol83" target="_blank" rel="noreferrer" className="text-white">
               <FaXTwitter />
             </a>
-            <a href="https://github.com" target="_blank" rel="noreferrer" className="text-white">
+            <a href="https://github.com/anzol83" target="_blank" rel="noreferrer" className="text-white">
               <FaGithub />
             </a>
           </div>
@@ -54,10 +54,10 @@ const Footer = () => {
         <Col md={3}>
           <h5 className="text-uppercase mb-3">Quick Links</h5>
           <ul className="list-unstyled d-flex flex-column gap-2">
-            <li><a href="/" className="text-white text-decoration-none">🏠 Home</a></li>
-            <li><a href="/" className="text-white text-decoration-none">📊 Dashboard</a></li>
-            <li><a href="#features" className="text-white text-decoration-none">✨ Features</a></li>
-            <li><a href="#contact" className="text-white text-decoration-none">📞 Contact</a></li>
+            <li><a href="/" className="text-white text-decoration-none">Home</a></li>
+            <li><a href="/" className="text-white text-decoration-none">Dashboard</a></li>
+            <li><a href="#features" className="text-white text-decoration-none">Features</a></li>
+            <li><a href="#contact" className="text-white text-decoration-none">Contact</a></li>
           </ul>
         </Col>
 
@@ -65,10 +65,10 @@ const Footer = () => {
         <Col md={3}>
           <h5 className="text-uppercase mb-3">Resources</h5>
           <ul className="list-unstyled d-flex flex-column gap-2">
-            <li><a href="#" className="text-white text-decoration-none">📝 Blog</a></li>
-            <li><a href="#" className="text-white text-decoration-none">📚 Documentation</a></li>
-            <li><a href="#" className="text-white text-decoration-none">❓ FAQs</a></li>
-            <li><a href="#" className="text-white text-decoration-none">🛠️ Support</a></li>
+            <li><a href="#" className="text-white text-decoration-none">Blog</a></li>
+            <li><a href="#" className="text-white text-decoration-none">Documentation</a></li>
+            <li><a href="#" className="text-white text-decoration-none">FAQs</a></li>
+            <li><a href="#" className="text-white text-decoration-none">Support</a></li>
           </ul>
         </Col>
 
@@ -97,7 +97,7 @@ const Footer = () => {
         <Col className="text-center pb-3">
           <small>
             &copy; 2025 <strong>Finance Tracker</strong>. All rights reserved. <br />
-            Made with ❤️ by{" "}
+            {/* Made with ❤️ by{" "}
             <a
               href="https://www.linkedin.com/in/anzol-neupane-276894250/"
               target="_blank"
@@ -105,7 +105,8 @@ const Footer = () => {
               className="text-decoration-underline text-primary"
             >
               Angel Neupane
-            </a>
+            </a> */}
+            <p>@angelbuilds</p>
           </small>
         </Col>
       </Row>
